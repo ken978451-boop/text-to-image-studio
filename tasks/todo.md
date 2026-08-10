@@ -1,16 +1,16 @@
 # Task Checklist
 
-- [ ] Task 1: 定義並測試提示驗證與 API 合約
+- [x] Task 1: 定義並測試提示驗證與 API 合約
   - Acceptance: 無效提示回傳一致的 422；成功回傳 PNG base64。
   - Verify: `npm test -- --test-name-pattern="validation|API"`
   - Files: `test/validation.test.js`, `test/api.test.js`, `src/validation.js`
 
-- [ ] Task 2: 實作 OpenAI 圖片服務與安全伺服器
+- [x] Task 2: 實作 OpenAI 圖片服務與安全伺服器
   - Acceptance: 使用 `gpt-image-2`；Key 僅在伺服器；有大小、頻率及安全標頭限制。
   - Verify: `npm test`、`npm audit --omit=dev`
   - Files: `src/image-service.js`, `src/app.js`, `src/server.js`, `package.json`
 
-- [ ] Task 3: 建立可存取的響應式網頁
+- [x] Task 3: 建立可存取的響應式網頁
   - Acceptance: 可輸入、送出並顯示載入、錯誤、圖片結果；手機及鍵盤可用。
   - Verify: 瀏覽器檢查 320/768/1024/1440px，主控台無錯誤。
   - Files: `public/index.html`, `public/styles.css`, `public/app.js`

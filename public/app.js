@@ -21,11 +21,13 @@ function setBusy(isBusy) {
   generateButton.setAttribute("aria-busy", String(isBusy));
   promptInput.readOnly = isBusy;
   generateButton.disabled = isBusy;
-  status.textContent = isBusy ? "正在產生圖片，請稍候。" : "";
 
-  if (!isBusy) {
-    updatePromptState();
+  if (isBusy) {
+    status.textContent = "正在產生圖片，請稍候。";
+    return;
   }
+
+  updatePromptState();
 }
 
 function showError(message) {
