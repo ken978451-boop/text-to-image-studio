@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="輸入文字提示，透過 OpenAI Image API 產生圖片的開源範例。">
+    <title>Text to Image Studio</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Text to Image Studio 首頁">
+          <span class="brand-mark" aria-hidden="true">TI</span>
+          <span>Text to Image Studio</span>
+        </a>
+        <a
+          class="header-link"
+          href="https://developers.openai.com/api/docs/guides/image-generation"
+          target="_blank"
+          rel="noreferrer"
+        >
+          API 文件
+          <span aria-hidden="true">↗</span>
+        </a>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">OPEN SOURCE · IMAGE LAB</p>
+        <h1 id="page-title">把一句想法，變成一張圖片。</h1>
+        <p class="intro-copy">
+          輸入你腦中的畫面，這個範例會安全地從伺服器呼叫 OpenAI Image API，
+          並將結果帶回瀏覽器。
+        </p>
+      </section>
+
+      <section class="workspace" aria-label="圖片產生工作區">
+        <div class="prompt-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="step-label">01 · DESCRIBE</p>
+              <h2>描述想產生的畫面</h2>
+            </div>
+            <span class="model-badge">GPT Image 2</span>
+          </div>
+
+          <form id="image-form" novalidate>
+            <div class="field-heading">
+              <label for="prompt">圖片提示文字</label>
+              <span id="character-count" aria-live="polite">0 / 1000</span>
+            </div>
+            <textarea
+              id="prompt"
+              name="prompt"
+              maxlength="1000"
+              minlength="3"
+              rows="8"
+              required
+              aria-describedby="prompt-hint"
+              placeholder="例如：清晨的台北街角，一間溫暖的小咖啡店，窗外下著細雨，電影感攝影"
+            ></textarea>
+            <p id="prompt-hint" class="field-hint">
+              建議包含主體、場景、光線與風格。每次產生一張 1024 × 1024 PNG 圖片。
+            </p>
+
+            <p id="error-message" class="error-message" role="alert" tabindex="-1" hidden></p>
+            <p id="status" class="sr-only" aria-live="polite"></p>
+
+            <div class="form-actions">
+              <p class="cost-note">
+                <span aria-hidden="true">◇</span>
+                API 呼叫可能產生費用
+              </p>
+              <button id="generate-button" class="primary-button" type="submit" disabled>
+                <span class="button-label">產生圖片</span>
+                <span class="button-progress" aria-hidden="true">產生中…</span>
+                <span class="button-arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="result-panel" aria-labelledby="result-title">
+          <div class="panel-heading result-heading">
+            <div>
+              <p class="step-label">02 · RESULT</p>
+              <h2 id="result-title">產生結果</h2>
+            </div>
+            <span class="status-dot">準備就緒</span>
+          </div>
+
+          <div id="empty-state" class="empty-state">
+            <svg viewBox="0 0 120 120" role="img" aria-label="等待產生圖片">
+              <rect x="18" y="18" width="84" height="84" rx="5"></rect>
+              <circle cx="76" cy="43" r="9"></circle>
+              <path d="M27 90 50 64l14 15 10-10 19 21"></path>
+              <path class="spark" d="M20 7v9M15.5 11.5h9"></path>
+              <path class="spark" d="M106 88v12M100 94h12"></path>
+            </svg>
+            <h3>你的圖片會出現在這裡</h3>
+            <p>先在左側輸入至少 3 個字元的提示文字。</p>
+          </div>
+
+          <figure id="result-figure" class="result-figure" hidden>
+            <img id="result-image" alt="依提示文字產生的圖片" tabindex="-1">
+            <figcaption id="result-caption"></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Built as a small, secure OpenAI API reference.</p>
+        <p>API Key 只存在伺服器端，不會傳送到瀏覽器。</p>
+      </footer>
+    </main>
+  </body>
+</html>

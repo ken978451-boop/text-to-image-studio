@@ -36,6 +36,9 @@ describe("POST /api/images", () => {
 
     assert.equal(response.status, 200);
     assert.equal(receivedPrompt, "a friendly robot");
+    assert.match(response.headers.get("content-security-policy"), /default-src 'self'/);
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(response.headers.get("x-powered-by"), null);
     assert.deepEqual(await response.json(), {
       data: { imageBase64: "cG5n", mimeType: "image/png" },
     });
@@ -65,6 +68,32 @@ describe("POST /api/images", () => {
       error: {
         code: "IMAGE_GENERATION_FAILED",
         message: "目前無法產生圖片，請稍後再試。",
+      },
+    });
+  });
+
+  it("limits repeated image requests to control API spending", async () => {
+    const app = createApp({
+      generateImage: async () => ({ imageBase64: "cG5n", mimeType: "image/png" }),
+    });
+    server = app.listen(0);
+    await new Promise((resolve) => server.once("listening", resolve));
+
+    const { port } = server.address();
+    let response;
+    for (let requestNumber = 0; requestNumber < 6; requestNumber += 1) {
+      response = await fetch(`http://127.0.0.1:${port}/api/images`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ prompt: "a small paper boat" }),
+      });
+    }
+
+    assert.equal(response.status, 429);
+    assert.deepEqual(await response.json(), {
+      error: {
+        code: "RATE_LIMITED",
+        message: "產生圖片的次數過多，請稍後再試。",
       },
     });
   });
