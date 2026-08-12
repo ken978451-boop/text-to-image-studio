@@ -11,4 +11,4 @@
 - [x] Run the full test suite and dependency audit.
 - [x] Verify both languages, keyboard-accessible native controls, responsive layouts, console, and API behavior in a real browser.
 - [x] Review the complete change for correctness, readability, architecture, security, and performance.
-- [ ] Merge the feature branch to `main` and push GitHub.
+- [x] Merge the feature branch to `main` and push GitHub.
