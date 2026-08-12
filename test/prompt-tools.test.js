@@ -8,16 +8,20 @@ import {
 } from "../public/prompt-tools.js";
 
 describe("composePrompt", () => {
-  it("trims values and omits empty prompt parts", () => {
-    const prompt = composePrompt({
-      subject: "  一隻橘貓  ",
-      scene: "雨中的台北街道",
-      lighting: "  電影感霓虹燈光 ",
+  it("trims values, omits empty parts, and accepts a localized separator", () => {
+    const parts = {
+      subject: "  一隻柴犬 ",
+      scene: "台北雨夜街道",
+      lighting: "  電影感霓虹光線 ",
       style: "",
       composition: "   ",
-    });
+    };
 
-    assert.equal(prompt, "一隻橘貓，雨中的台北街道，電影感霓虹燈光");
+    assert.equal(composePrompt(parts), "一隻柴犬，台北雨夜街道，電影感霓虹光線");
+    assert.equal(
+      composePrompt(parts, { separator: ", " }),
+      "一隻柴犬, 台北雨夜街道, 電影感霓虹光線",
+    );
   });
 
   it("returns an empty string when every part is empty", () => {
@@ -29,19 +33,32 @@ describe("composePrompt", () => {
 });
 
 describe("buildPrivacyReceipt", () => {
-  it("records the exact prompt, external service, model, and retention boundary", () => {
-    const receipt = buildPrivacyReceipt({
-      prompt: "月光下閱讀的橘貓",
-      model: "gpt-image-2",
-      createdAt: new Date("2026-08-12T06:05:09.000Z"),
-    });
+  const receiptInput = {
+    prompt: "一隻穿雨衣的柴犬",
+    model: "gpt-image-2",
+    createdAt: new Date("2026-08-12T06:05:09.000Z"),
+  };
 
-    assert.match(receipt, /完整提示文字：月光下閱讀的橘貓/);
-    assert.match(receipt, /接收服務：OpenAI Image API/);
+  it("records the exact prompt and boundaries in Traditional Chinese", () => {
+    const receipt = buildPrivacyReceipt({ ...receiptInput, locale: "zh-Hant" });
+
+    assert.match(receipt, /實際送出的提示：一隻穿雨衣的柴犬/);
+    assert.match(receipt, /外部服務：OpenAI Image API/);
     assert.match(receipt, /模型：gpt-image-2/);
     assert.match(receipt, /產生時間：2026-08-12T06:05:09\.000Z/);
-    assert.match(receipt, /本程式保存：不會持久保存提示文字或產生圖片/);
-    assert.match(receipt, /無法撤回已傳送至 OpenAI 的資料/);
+    assert.match(receipt, /不會加入資料庫/);
+    assert.match(receipt, /OpenAI/);
+  });
+
+  it("records the same exact prompt and boundaries in English", () => {
+    const receipt = buildPrivacyReceipt({ ...receiptInput, locale: "en" });
+
+    assert.match(receipt, /Exact prompt sent: 一隻穿雨衣的柴犬/);
+    assert.match(receipt, /External service: OpenAI Image API/);
+    assert.match(receipt, /Model: gpt-image-2/);
+    assert.match(receipt, /Created at: 2026-08-12T06:05:09\.000Z/);
+    assert.match(receipt, /does not add database storage/);
+    assert.match(receipt, /OpenAI/);
   });
 });
 
@@ -57,6 +74,7 @@ describe("createExportFilename", () => {
   });
 
   it("rejects unknown export types", () => {
-    assert.throws(() => createExportFilename("月光下的橘貓", new Date()), /Unknown export type/);
+    assert.throws(() => createExportFilename("unknown", new Date()), /Unknown export type/);
   });
 });
+

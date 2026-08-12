@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, translate } from "./translations.js";
+
 const promptPartNames = ["subject", "scene", "lighting", "style", "composition"];
 
 const exportTypes = {
@@ -9,22 +11,22 @@ function twoDigits(value) {
   return String(value).padStart(2, "0");
 }
 
-export function composePrompt(parts) {
+export function composePrompt(parts, { separator = "，" } = {}) {
   return promptPartNames
     .map((name) => (typeof parts[name] === "string" ? parts[name].trim() : ""))
     .filter(Boolean)
-    .join("，");
+    .join(separator);
 }
 
-export function buildPrivacyReceipt({ prompt, model, createdAt }) {
+export function buildPrivacyReceipt({ prompt, model, createdAt, locale = DEFAULT_LOCALE }) {
   return [
-    "Text to Image Studio｜隱私收據",
-    `產生時間：${createdAt.toISOString()}`,
-    "接收服務：OpenAI Image API",
-    `模型：${model}`,
-    `完整提示文字：${prompt}`,
-    "本程式保存：不會持久保存提示文字或產生圖片。",
-    "清除限制：清除目前頁面無法撤回已傳送至 OpenAI 的資料。",
+    translate(locale, "receipt.file.title"),
+    translate(locale, "receipt.file.created", { value: createdAt.toISOString() }),
+    translate(locale, "receipt.file.service", { value: "OpenAI Image API" }),
+    translate(locale, "receipt.file.model", { value: model }),
+    translate(locale, "receipt.file.prompt", { value: prompt }),
+    translate(locale, "receipt.file.storage"),
+    translate(locale, "receipt.file.clear"),
   ].join("\n");
 }
 
