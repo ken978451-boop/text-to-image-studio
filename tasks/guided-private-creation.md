@@ -24,4 +24,4 @@
 - [x] Run the full test suite and dependency audit.
 - [x] Test the complete workflow in a real browser at 320px, 768px, 1024px, and 1440px.
 - [x] Review correctness, readability, architecture, security, and performance.
-- [ ] Scan for secrets and confirm the branch is clean after publishing.
+- [x] Scan for secrets and confirm the branch is clean after publishing.
