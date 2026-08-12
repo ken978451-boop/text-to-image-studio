@@ -8,7 +8,7 @@
 - [x] Add failing contract tests for the bilingual transparency page and source links.
 - [x] Implement `/transparency.html` and its localized behavior.
 - [x] Update user-facing documentation.
-- [ ] Run the full test suite and dependency audit.
-- [ ] Verify both languages, keyboard behavior, responsive layouts, console, and network in a real browser.
-- [ ] Review the complete change for correctness, readability, architecture, security, and performance.
+- [x] Run the full test suite and dependency audit.
+- [x] Verify both languages, keyboard-accessible native controls, responsive layouts, console, and API behavior in a real browser.
+- [x] Review the complete change for correctness, readability, architecture, security, and performance.
 - [ ] Merge the feature branch to `main` and push GitHub.
