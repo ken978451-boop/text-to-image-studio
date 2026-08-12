@@ -24,6 +24,8 @@ This repository does not include code that intentionally writes prompts or gener
 - analytics, advertising, or telemetry services; or
 - application request logs.
 
+The Traditional Chinese and English language choice is also kept only in current page memory. Switching language does not write a cookie or browser-storage value and does not translate or transmit the user's prompt.
+
 All `/api` responses include `Cache-Control: no-store`. This asks browsers and intermediaries not to cache them, but it cannot guarantee how every browser extension, operating system, proxy, or network product behaves.
 
 ## Transient Processing
@@ -48,3 +50,5 @@ This project's promises cover only the code in this repository. A hosting platfo
 ## Changes to This Privacy Model
 
 A contribution that adds storage, accounts, analytics, logging of request bodies, or another external service must update this document and receive explicit review before it is merged.
+
+The running application provides the same boundaries in both languages at `/transparency.html`, with direct links to the source and tests that implement them. That page is an inspectable project explanation, not a certification or guarantee about OpenAI, hosting infrastructure, or the user's environment.

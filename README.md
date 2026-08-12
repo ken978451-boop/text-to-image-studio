@@ -6,6 +6,8 @@ This project is local-first, not offline. When you submit a prompt, the server s
 
 ## Features
 
+- Switches the complete interface, prompt builder, errors, status messages, and privacy receipts between Traditional Chinese and English without reloading or storing the choice.
+- Provides a bilingual in-product transparency center with direct links from privacy claims to source, tests, and boundary documents.
 - Offers an optional browser-only builder for subject, scene, lighting, style, and composition.
 - Keeps the API key on the server and never exposes it to browser code or responses.
 - Does not persist prompts or generated images in an application database or browser storage.
@@ -29,10 +31,13 @@ See [Privacy](PRIVACY.md) for the exact data flow and limitations, [Security](SE
 
 ## Using the Workspace
 
-1. Write a prompt directly or open the optional prompt builder. Applying builder choices only updates the current browser page and does not call OpenAI.
-2. Review the final prompt, then select **Generate**. This is the point at which the prompt is sent to OpenAI.
-3. Download the PNG, copy the exact generation prompt, or download the plain-text privacy receipt if desired.
-4. Select **Clear screen** to remove the prompt, builder values, image, and receipt from the current page.
+1. Use **繁中 / EN** to switch the complete interface. The choice stays only in current page memory and does not clear your work.
+2. Write a prompt directly or open the optional prompt builder. Applying builder choices only updates the current browser page and does not call OpenAI.
+3. Review the final prompt, then select **Generate**. This is the point at which the prompt is sent to OpenAI.
+4. Download the PNG, copy the exact generation prompt, or download the plain-text privacy receipt if desired.
+5. Select **Clear screen** to remove the prompt, builder values, image, and receipt from the current page.
+
+Open <http://127.0.0.1:3000/transparency.html> to inspect the data flow, safeguards, limits, and supporting source links from inside the application.
 
 Downloads and clipboard copies are controlled by the user and exist outside the application's page state. Clearing the page does not delete those copies.
 
@@ -109,7 +114,7 @@ Errors consistently use the following structure:
 }
 ```
 
-The current web interface and user-facing validation messages are written in Traditional Chinese. Project documentation is provided in English for international contributors and reviewers.
+The web interface and its user-facing validation messages support Traditional Chinese and English. Project documentation is provided in English for international contributors and reviewers.
 
 ## Project Documents
 
