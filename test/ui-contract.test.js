@@ -94,4 +94,3 @@ describe("browser UI contract", () => {
     assert.match(styles, /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/s);
   });
 });
-

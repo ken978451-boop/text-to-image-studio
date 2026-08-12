@@ -55,4 +55,3 @@ The page must avoid certification, compliance, guarantee, or privacy-score claim
 - Languages beyond Traditional Chinese and English.
 - Privacy scores, compliance claims, certifications, or third-party scanning.
 - Inspecting or scanning the user's computer.
-

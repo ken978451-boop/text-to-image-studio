@@ -152,7 +152,7 @@ const messages = {
   "transparency.notAdded.title": ["本程式沒有加入什麼", "What this application does not add"],
   "transparency.notAdded.body": ["沒有應用程式資料庫、帳號系統、分析追蹤、提示紀錄，也不會用 Cookie 或瀏覽器儲存保存語言、提示或圖片。", "There is no application database, account system, analytics tracking, or prompt log, and no cookies or browser storage are used to retain language, prompts, or images."],
   "transparency.safeguards.title": ["保護措施", "Safeguards"],
-  "transparency.safeguards.body": ["伺服器限制輸入大小與產生頻率、驗證提示與圖片回應、加入安全標頭與 no-store 快取指示。頁面以安全文字節點顯示使用者與服務資料，API Key 只在伺服器端使用。", "The server limits input size and generation rate, validates prompts and image responses, and adds security headers plus no-store cache directives. The page renders user and service data as safe text, and the API key is used only on the server."],
+  "transparency.safeguards.body": ["伺服器限制輸入大小與產生頻率、驗證提示與圖片回應，並為 API 回應加入 no-store 快取指示。頁面以安全文字節點顯示使用者與服務資料，API Key 只在伺服器端使用，所有頁面都有安全標頭。", "The server limits input size and generation rate, validates prompts and image responses, and adds no-store cache directives to API responses. The page renders user and service data as safe text, the API key is used only on the server, and security headers cover every page."],
   "transparency.limits.title": ["限制與責任邊界", "Limits and responsibility boundaries"],
   "transparency.limits.body": ["本程式無法控制 OpenAI 的服務端資料處理、部署主機與網路供應商、瀏覽器擴充功能，或使用者下載與複製後的檔案。公開部署也會改變本機使用的威脅模型。", "This application cannot control OpenAI's service-side handling, hosting and network providers, browser extensions, or files after a user downloads or copies them. Public deployment also changes the local-use threat model."],
   "transparency.verify.title": ["如何自行驗證", "How to verify"],

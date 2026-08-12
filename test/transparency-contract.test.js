@@ -17,6 +17,7 @@ describe("transparency center contract", () => {
     assert.match(html, /data-title-key="meta\.transparency\.title"/);
     assert.match(html, /data-description-key="meta\.transparency\.description"/);
     assert.match(html, /<script type="module" src="\/transparency\.js"><\/script>/);
+    assert.match(html, /<link rel="stylesheet" href="\/transparency\.css">/);
     assert.match(html, /data-locale="zh-Hant"[^>]+aria-pressed="true"/);
     assert.match(html, /data-locale="en"[^>]+aria-pressed="false"/);
     assert.match(script, /applyTranslations/);
@@ -65,4 +66,3 @@ describe("transparency center contract", () => {
     assert.doesNotMatch(html, /100% private|certified private|privacy guaranteed|隱私保證|通過隱私認證/i);
   });
 });
-

@@ -6,6 +6,7 @@
     <meta name="description" content="查看文字轉圖片工作室的資料流、保護措施、限制與可驗證來源。">
     <title>透明中心｜文字轉圖片工作室</title>
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/transparency.css">
     <script type="module" src="/transparency.js"></script>
   </head>
   <body data-title-key="meta.transparency.title" data-description-key="meta.transparency.description">
@@ -79,7 +80,7 @@
             <p class="step-label">04 ・ SAFEGUARDS</p>
             <h2 id="safeguards-title" data-i18n="transparency.safeguards.title">保護措施</h2>
             <p data-i18n="transparency.safeguards.body">
-              伺服器限制輸入大小與產生頻率、驗證提示與圖片回應、加入安全標頭與 no-store 快取指示。頁面以安全文字節點顯示使用者與服務資料，API Key 只在伺服器端使用。
+              伺服器限制輸入大小與產生頻率、驗證提示與圖片回應，並為 API 回應加入 no-store 快取指示。頁面以安全文字節點顯示使用者與服務資料，API Key 只在伺服器端使用，所有頁面都有安全標頭。
             </p>
           </section>
           <section class="transparency-section limit-section" aria-labelledby="limits-title">
@@ -119,4 +120,3 @@
     </main>
   </body>
 </html>
-

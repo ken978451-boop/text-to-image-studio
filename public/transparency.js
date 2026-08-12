@@ -17,4 +17,3 @@ for (const button of languageButtons) {
 }
 
 setLocale(DEFAULT_LOCALE);
-

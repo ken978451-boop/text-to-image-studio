@@ -31,7 +31,6 @@ describe("composePrompt", () => {
     );
   });
 });
-
 describe("buildPrivacyReceipt", () => {
   const receiptInput = {
     prompt: "一隻穿雨衣的柴犬",
@@ -77,4 +76,3 @@ describe("createExportFilename", () => {
     assert.throws(() => createExportFilename("unknown", new Date()), /Unknown export type/);
   });
 });
-
