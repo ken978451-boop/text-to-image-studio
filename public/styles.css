@@ -410,6 +410,7 @@ textarea:focus {
 }
 
 .clear-button {
+  min-height: 44px;
   padding: 7px 10px;
   color: var(--ink-soft);
   background: transparent;

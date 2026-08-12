@@ -59,6 +59,7 @@ describe("browser UI contract", () => {
     const styles = await readFile(new URL("public/styles.css", projectRoot), "utf8");
 
     assert.match(html, /id="export-actions"[^>]+hidden/);
+    assert.match(html, /id="export-actions"[^>]+role="group"[^>]+aria-label="成果匯出"/);
     for (const action of ["download-image", "copy-prompt", "download-receipt"]) {
       assert.match(html, new RegExp(`id="${action}"[^>]+type="button"`));
     }
