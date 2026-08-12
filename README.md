@@ -6,9 +6,12 @@ This project is local-first, not offline. When you submit a prompt, the server s
 
 ## Features
 
+- Offers an optional browser-only builder for subject, scene, lighting, style, and composition.
 - Keeps the API key on the server and never exposes it to browser code or responses.
 - Does not persist prompts or generated images in an application database or browser storage.
 - Marks all API responses `Cache-Control: no-store` and provides a clear-screen action.
+- Displays a plain-language privacy receipt after generation.
+- Lets users explicitly download the PNG, copy the exact generation prompt, or download the receipt.
 - Binds to `127.0.0.1` by default to avoid unintended local-network access.
 - Validates prompts on the server and limits them to 3–1,000 characters.
 - Limits image generation to five requests every 15 minutes to reduce accidental API spending.
@@ -23,6 +26,15 @@ The prompt travels from your browser to this local server and then to the OpenAI
 The in-memory rate limiter temporarily processes a client network address for up to 15 minutes. OpenAI and any hosting or network provider are outside this project's storage boundary and may process data under their own policies. Do not enter secrets, personal data, or confidential material in a prompt.
 
 See [Privacy](PRIVACY.md) for the exact data flow and limitations, [Security](SECURITY.md) for vulnerability reporting, and the [Threat Model](THREAT-MODEL.md) for risks and mitigations.
+
+## Using the Workspace
+
+1. Write a prompt directly or open the optional prompt builder. Applying builder choices only updates the current browser page and does not call OpenAI.
+2. Review the final prompt, then select **Generate**. This is the point at which the prompt is sent to OpenAI.
+3. Download the PNG, copy the exact generation prompt, or download the plain-text privacy receipt if desired.
+4. Select **Clear screen** to remove the prompt, builder values, image, and receipt from the current page.
+
+Downloads and clipboard copies are controlled by the user and exist outside the application's page state. Clearing the page does not delete those copies.
 
 ## Requirements
 

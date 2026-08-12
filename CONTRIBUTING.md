@@ -20,6 +20,7 @@ Tests use a fake image generator and must not call the live OpenAI API.
 - Do not add analytics, tracking, cookies, persistent storage, accounts, or a new external service without prior design discussion and updates to `PRIVACY.md` and `THREAT-MODEL.md`.
 - Keep the API key server-side and preserve `Cache-Control: no-store` on API responses.
 - Use safe DOM APIs for untrusted content; do not render prompts or errors with `innerHTML`.
+- Keep exports user-initiated, use neutral filenames, and disclose when an export contains the prompt.
 - Add or update tests for every behavior change.
 
 ## Pull Requests

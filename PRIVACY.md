@@ -7,16 +7,18 @@ Text to Image Studio is designed for local, transient use. It has no user accoun
 ## Data Flow
 
 1. You type a prompt in the browser. The prompt remains in the page until you submit it.
-2. When you select **Generate**, the browser sends the prompt to the local Node.js server.
-3. The server validates the prompt and sends it to the OpenAI Image API using the server-side API key.
-4. OpenAI returns encoded image data. The server forwards it to the current browser page.
-5. The page displays the image as an in-memory data URL. Selecting **Clear screen**, reloading, or closing the page removes the application's active references to the prompt and image.
+2. If you use the optional builder, the browser combines those fields locally. Applying the builder does not make a network request.
+3. When you select **Generate**, the browser sends the final prompt to the local Node.js server.
+4. The server validates the prompt and sends it to the OpenAI Image API using the server-side API key.
+5. OpenAI returns encoded image data. The server forwards it to the current browser page.
+6. The page displays the image and a privacy receipt in memory. Selecting **Clear screen**, reloading, or closing the page removes the application's active references.
+7. Only explicit export actions create a PNG download, copy the prompt to the operating-system clipboard, or download a receipt containing the prompt.
 
-## What This Application Does Not Persist
+## What This Application Does Not Automatically Persist
 
 This repository does not include code that intentionally writes prompts or generated images to:
 
-- a database or file;
+- a database or server-side file;
 - cookies;
 - `localStorage`, `sessionStorage`, or IndexedDB;
 - analytics, advertising, or telemetry services; or
@@ -40,6 +42,7 @@ This project's promises cover only the code in this repository. A hosting platfo
 
 - Do not submit passwords, API keys, health information, personal identifiers, confidential business data, or material you are not authorized to share.
 - **Clear screen** clears the prompt and displayed image from the current page state. It does not recall data already sent to OpenAI, remove downloaded files or screenshots, or erase external logs.
+- **Download PNG**, **Copy prompt**, and **Download privacy receipt** create user-controlled copies outside the page. The receipt and clipboard copy contain the full prompt. Clear those copies using your operating system if they are no longer needed.
 - Keep the default `HOST=127.0.0.1` for local-only access.
 
 ## Changes to This Privacy Model

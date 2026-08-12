@@ -25,6 +25,7 @@ This model covers the local browser interface, the Node.js server in this reposi
 | API key exposed to the browser or repository | Key is read server-side; `.env` and key files are ignored | Screenshots, shell history, host compromise, or an accidental commit can still expose it |
 | Sensitive prompt sent without user awareness | The interface discloses the OpenAI transfer next to the prompt | A user may still submit sensitive data; OpenAI is an external processor |
 | Prompt or image retained by the application | No application database or browser storage; API responses use `no-store`; clear action removes page references | Runtime memory is not securely erased; external infrastructure may log or cache |
+| Prompt disclosed through an export | Export actions require an explicit click; filenames never contain prompt text; the interface warns that receipts include the full prompt | Downloaded files and clipboard contents are managed by the operating system and survive page clearing |
 | Cross-site scripting from prompts or API data | Content is assigned through safe DOM properties; inline scripts are blocked by CSP | A browser, dependency, or future rendering change may introduce new risk |
 | Malformed or oversized input | Strict JSON parser, 4 KB request limit, and prompt validation | Resource exhaustion remains possible under sustained local or public traffic |
 | Unexpected API spending | Five requests per 15 minutes per client identifier | In-memory limiting resets on restart and is unsuitable for distributed public deployment |
@@ -37,6 +38,7 @@ This model covers the local browser interface, the Node.js server in this reposi
 - The local operating system, browser, Node.js runtime, and user account are trusted.
 - The OpenAI endpoint and TLS validation provided by the runtime are trusted.
 - The user protects the `.env` file and does not install untrusted browser extensions or dependencies.
+- The user controls access to downloaded files, screenshots, and operating-system clipboard history.
 
 ## Out of Scope for the Local Reference App
 
