@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="查看文字轉圖片工作室的資料流、保護措施、限制與可驗證來源。">
+    <title>透明中心｜文字轉圖片工作室</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/transparency.js"></script>
+  </head>
+  <body data-title-key="meta.transparency.title" data-description-key="meta.transparency.description">
+    <main class="page-shell transparency-page">
+      <header class="site-header">
+        <a class="brand" href="/" data-i18n-aria-label="brand.homeLabel" aria-label="文字轉圖片工作室首頁">
+          <span class="brand-mark" aria-hidden="true">TI</span>
+          <span>Text to Image Studio</span>
+        </a>
+        <div class="header-actions">
+          <a class="header-link" href="/" data-i18n="nav.backToStudio">返回工作室</a>
+          <div class="language-switcher" role="group" data-i18n-aria-label="locale.label" aria-label="選擇介面語言">
+            <button class="language-button" type="button" data-locale="zh-Hant" aria-pressed="true" data-i18n="locale.zh">繁中</button>
+            <button class="language-button" type="button" data-locale="en" aria-pressed="false" data-i18n="locale.en">EN</button>
+          </div>
+        </div>
+      </header>
+
+      <section class="transparency-intro" aria-labelledby="transparency-title">
+        <p class="eyebrow" data-i18n="transparency.eyebrow">可檢查的隱私說明</p>
+        <h1 id="transparency-title" data-i18n="transparency.title">透明中心</h1>
+        <p data-i18n="transparency.intro">
+          這裡說明目前原始碼實際做到的資料處理方式，並提供可直接檢查的來源。這不是隱私認證或保證。
+        </p>
+      </section>
+
+      <div class="transparency-content">
+        <section class="transparency-section flow-section" aria-labelledby="flow-title">
+          <p class="step-label">01 ・ DATA FLOW</p>
+          <h2 id="flow-title" data-i18n="transparency.flow.title">資料如何流動</h2>
+          <div class="flow-grid">
+            <article class="flow-step">
+              <span class="flow-number" aria-hidden="true">01</span>
+              <h3 data-i18n="transparency.flow.browser.title">1. 你的瀏覽器</h3>
+              <p data-i18n="transparency.flow.browser.body">提示先留在目前頁面；提示組合器也只在瀏覽器內運作。</p>
+            </article>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <article class="flow-step">
+              <span class="flow-number" aria-hidden="true">02</span>
+              <h3 data-i18n="transparency.flow.server.title">2. 本機 Node.js 伺服器</h3>
+              <p data-i18n="transparency.flow.server.body">按下產生後，伺服器驗證提示並使用只存在伺服器端的 API Key 發出請求。</p>
+            </article>
+            <span class="flow-arrow" aria-hidden="true">→</span>
+            <article class="flow-step">
+              <span class="flow-number" aria-hidden="true">03</span>
+              <h3 data-i18n="transparency.flow.openai.title">3. OpenAI Image API</h3>
+              <p data-i18n="transparency.flow.openai.body">OpenAI 處理提示並回傳圖片；圖片再顯示於目前瀏覽器頁面。</p>
+            </article>
+          </div>
+        </section>
+
+        <div class="transparency-pair">
+          <section class="transparency-section" aria-labelledby="processed-title">
+            <p class="step-label">02 ・ PROCESSED</p>
+            <h2 id="processed-title" data-i18n="transparency.processed.title">處理哪些資料</h2>
+            <p data-i18n="transparency.processed.body">
+              產生時處理實際提示、圖片回應與限制濫用所需的暫時網路位址資訊。下載或複製只在你明確操作時發生。
+            </p>
+          </section>
+          <section class="transparency-section" aria-labelledby="not-added-title">
+            <p class="step-label">03 ・ NOT ADDED</p>
+            <h2 id="not-added-title" data-i18n="transparency.notAdded.title">本程式沒有加入什麼</h2>
+            <p data-i18n="transparency.notAdded.body">
+              沒有應用程式資料庫、帳號系統、分析追蹤、提示紀錄，也不會用 Cookie 或瀏覽器儲存保存語言、提示或圖片。
+            </p>
+          </section>
+        </div>
+
+        <div class="transparency-pair">
+          <section class="transparency-section" aria-labelledby="safeguards-title">
+            <p class="step-label">04 ・ SAFEGUARDS</p>
+            <h2 id="safeguards-title" data-i18n="transparency.safeguards.title">保護措施</h2>
+            <p data-i18n="transparency.safeguards.body">
+              伺服器限制輸入大小與產生頻率、驗證提示與圖片回應、加入安全標頭與 no-store 快取指示。頁面以安全文字節點顯示使用者與服務資料，API Key 只在伺服器端使用。
+            </p>
+          </section>
+          <section class="transparency-section limit-section" aria-labelledby="limits-title">
+            <p class="step-label">05 ・ LIMITS</p>
+            <h2 id="limits-title" data-i18n="transparency.limits.title">限制與責任邊界</h2>
+            <p data-i18n="transparency.limits.body">
+              本程式無法控制 OpenAI 的服務端資料處理、部署主機與網路供應商、瀏覽器擴充功能，或使用者下載與複製後的檔案。公開部署也會改變本機使用的威脅模型。
+            </p>
+          </section>
+        </div>
+
+        <section class="transparency-section verify-section" aria-labelledby="verify-title">
+          <p class="step-label">06 ・ VERIFY</p>
+          <h2 id="verify-title" data-i18n="transparency.verify.title">如何自行驗證</h2>
+          <p data-i18n="transparency.verify.intro">
+            以下連結直接指向實作、測試與邊界文件。請以目前版本的原始碼與實際部署設定為準。
+          </p>
+          <ul class="verify-list">
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/src/image-service.js" target="_blank" rel="noreferrer" data-i18n="transparency.verify.service">OpenAI 請求與回應驗證</a><code>src/image-service.js</code></li>
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/src/app.js" target="_blank" rel="noreferrer" data-i18n="transparency.verify.server">安全標頭、no-store、速率與 API 路由</a><code>src/app.js</code></li>
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/test/api.test.js" target="_blank" rel="noreferrer" data-i18n="transparency.verify.apiTests">API 邊界測試</a><code>test/api.test.js</code></li>
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/test/ui-contract.test.js" target="_blank" rel="noreferrer" data-i18n="transparency.verify.uiTests">介面與非持久化契約測試</a><code>test/ui-contract.test.js</code></li>
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/public/prompt-tools.js" target="_blank" rel="noreferrer" data-i18n="transparency.verify.promptTools">本機提示組合與收據邏輯</a><code>public/prompt-tools.js</code></li>
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/THREAT-MODEL.md" target="_blank" rel="noreferrer" data-i18n="transparency.verify.threatModel">威脅模型</a><code>THREAT-MODEL.md</code></li>
+            <li><a href="https://github.com/ken978451-boop/text-to-image-studio/blob/main/PRIVACY.md" target="_blank" rel="noreferrer" data-i18n="transparency.verify.privacy">隱私說明</a><code>PRIVACY.md</code></li>
+          </ul>
+          <p class="verify-disclaimer" data-i18n="transparency.verify.disclaimer">
+            連結可證明此專案加入的控制，但不能證明專案之外的服務或使用環境。
+          </p>
+        </section>
+      </div>
+
+      <footer class="site-footer">
+        <p data-i18n="footer.project">隱私優先的引導式創作・開放原始碼</p>
+        <p data-i18n="footer.key">API Key 只保留在本機伺服器，不會送到瀏覽器。</p>
+      </footer>
+    </main>
+  </body>
+</html>
+
