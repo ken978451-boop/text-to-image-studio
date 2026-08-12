@@ -8,6 +8,7 @@ const emptyState = document.querySelector("#empty-state");
 const resultFigure = document.querySelector("#result-figure");
 const resultImage = document.querySelector("#result-image");
 const resultCaption = document.querySelector("#result-caption");
+const clearButton = document.querySelector("#clear-button");
 
 function updatePromptState() {
   const length = promptInput.value.length;
@@ -78,6 +79,7 @@ form.addEventListener("submit", async (event) => {
     resultCaption.textContent = `提示：${prompt}`;
     emptyState.hidden = true;
     resultFigure.hidden = false;
+    clearButton.hidden = false;
     status.textContent = "圖片已產生完成。";
     resultImage.focus();
   } catch (error) {
@@ -85,6 +87,19 @@ form.addEventListener("submit", async (event) => {
   } finally {
     setBusy(false);
   }
+});
+
+clearButton.addEventListener("click", () => {
+  promptInput.value = "";
+  resultImage.removeAttribute("src");
+  resultCaption.textContent = "";
+  resultFigure.hidden = true;
+  emptyState.hidden = false;
+  clearButton.hidden = true;
+  clearError();
+  status.textContent = "提示文字與圖片已從畫面清除。";
+  updatePromptState();
+  promptInput.focus();
 });
 
 updatePromptState();

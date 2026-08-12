@@ -63,6 +63,12 @@
             <p id="prompt-hint" class="field-hint">
               建議包含主體、場景、光線與風格。每次產生一張 1024 × 1024 PNG 圖片。
             </p>
+            <aside class="privacy-note" aria-labelledby="privacy-note-title">
+              <p id="privacy-note-title" class="privacy-note-title">隱私提醒</p>
+              <p>
+                提示文字會在你按下產生後傳送至 OpenAI。本專案不會將提示文字或圖片保存到資料庫，也不包含分析或追蹤工具。
+              </p>
+            </aside>
 
             <p id="error-message" class="error-message" role="alert" tabindex="-1" hidden></p>
             <p id="status" class="sr-only" aria-live="polite"></p>
@@ -87,7 +93,10 @@
               <p class="step-label">02 · RESULT</p>
               <h2 id="result-title">產生結果</h2>
             </div>
-            <span class="status-dot">準備就緒</span>
+            <div class="result-actions">
+              <button id="clear-button" class="clear-button" type="button" hidden>清除畫面</button>
+              <span class="status-dot">準備就緒</span>
+            </div>
           </div>
 
           <div id="empty-state" class="empty-state">

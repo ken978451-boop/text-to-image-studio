@@ -28,6 +28,10 @@ export function createApp({ generateImage, rateLimitEnabled = true }) {
       },
     }),
   );
+  app.use("/api", (_request, response, next) => {
+    response.set("Cache-Control", "no-store");
+    next();
+  });
   app.use(express.json({ limit: "4kb", strict: true }));
   app.use(express.static(publicDirectory));
 

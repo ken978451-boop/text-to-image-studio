@@ -23,4 +23,16 @@ describe("browser UI contract", () => {
     assert.doesNotMatch(html, /<script(?! src=)/);
     assert.doesNotMatch(script, /innerHTML|insertAdjacentHTML|document\.write/);
   });
+
+  it("discloses the external data flow and lets users clear transient data", async () => {
+    const html = await readFile(new URL("public/index.html", projectRoot), "utf8");
+    const script = await readFile(new URL("public/app.js", projectRoot), "utf8");
+
+    assert.match(html, /提示文字會在你按下產生後傳送至 OpenAI/);
+    assert.match(html, /本專案不會將提示文字或圖片保存到資料庫/);
+    assert.match(html, /<button[^>]+id="clear-button"[^>]+type="button"/);
+    assert.match(script, /resultImage\.removeAttribute\("src"\)/);
+    assert.match(script, /promptInput\.value = ""/);
+    assert.doesNotMatch(script, /localStorage|sessionStorage|indexedDB/);
+  });
 });

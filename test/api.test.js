@@ -37,6 +37,7 @@ describe("POST /api/images", () => {
     assert.equal(response.status, 200);
     assert.equal(receivedPrompt, "a friendly robot");
     assert.match(response.headers.get("content-security-policy"), /default-src 'self'/);
+    assert.equal(response.headers.get("cache-control"), "no-store");
     assert.equal(response.headers.get("x-content-type-options"), "nosniff");
     assert.equal(response.headers.get("x-powered-by"), null);
     assert.deepEqual(await response.json(), {
@@ -50,12 +51,34 @@ describe("POST /api/images", () => {
     });
 
     assert.equal(response.status, 422);
+    assert.equal(response.headers.get("cache-control"), "no-store");
     assert.deepEqual(await response.json(), {
       error: {
         code: "VALIDATION_ERROR",
         message: "提示文字至少需要 3 個字元。",
       },
     });
+  });
+
+  it("prevents caching malformed request errors", async () => {
+    const app = createApp({
+      generateImage: async () => {
+        throw new Error("should not be called");
+      },
+      rateLimitEnabled: false,
+    });
+    server = app.listen(0);
+    await new Promise((resolve) => server.once("listening", resolve));
+
+    const { port } = server.address();
+    const response = await fetch(`http://127.0.0.1:${port}/api/images`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: "{",
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(response.headers.get("cache-control"), "no-store");
   });
 
   it("returns a generic error when the image service is unavailable", async () => {

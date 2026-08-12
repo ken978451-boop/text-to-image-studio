@@ -16,26 +16,26 @@ Evolve Text to Image Studio into a privacy-first, local OpenAI Image API referen
 
 ### Phase 1: Privacy behavior
 
-- [ ] Add tests requiring `Cache-Control: no-store` on image API responses.
-- [ ] Add an accessible clear action for prompt and generated-image data.
-- [ ] Add a concise in-product privacy disclosure.
+- [x] Add tests requiring `Cache-Control: no-store` on image API responses.
+- [x] Add an accessible clear action for prompt and generated-image data.
+- [x] Add a concise in-product privacy disclosure.
 
 ### Checkpoint: Privacy behavior
 
-- [ ] Focused API and UI tests pass.
-- [ ] No browser persistence APIs or analytics are introduced.
+- [x] Focused API and UI tests pass.
+- [x] No browser persistence APIs or analytics are introduced.
 
 ### Phase 2: Public documentation
 
-- [ ] Add `PRIVACY.md`, `SECURITY.md`, `THREAT-MODEL.md`, and `CONTRIBUTING.md`.
-- [ ] Link privacy and security documentation from the README.
-- [ ] Document exactly what is and is not retained by this application.
+- [x] Add `PRIVACY.md`, `SECURITY.md`, `THREAT-MODEL.md`, and `CONTRIBUTING.md`.
+- [x] Link privacy and security documentation from the README.
+- [x] Document exactly what is and is not retained by this application.
 
 ### Checkpoint: Complete
 
-- [ ] Full test suite passes.
-- [ ] Dependency audit has no vulnerabilities.
-- [ ] Secret scan shows no credentials or personal application data.
+- [x] Full test suite passes.
+- [x] Dependency audit has no vulnerabilities.
+- [x] Secret scan shows no credentials or personal application data.
 - [ ] Changes are reviewed, committed, and published to GitHub.
 
 ## Risks and Mitigations

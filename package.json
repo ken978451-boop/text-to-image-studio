@@ -2,7 +2,7 @@
   "name": "text-to-image-studio",
   "version": "1.0.0",
   "private": true,
-  "description": "A small, secure OpenAI Image API example for turning text prompts into images.",
+  "description": "A privacy-first local OpenAI Image API example for turning text prompts into images.",
   "type": "module",
   "scripts": {
     "dev": "node --env-file-if-exists=.env --watch src/server.js",
