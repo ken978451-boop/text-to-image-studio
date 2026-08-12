@@ -3,51 +3,59 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="使用本機提示詞建構器與透明隱私收據，透過 OpenAI Image API 產生圖片。">
-    <title>Text to Image Studio</title>
+    <meta name="description" content="隱私優先的文字轉圖片範例，提示只在你按下產生後送往 OpenAI。">
+    <title>文字轉圖片工作室</title>
     <link rel="stylesheet" href="/styles.css">
     <script type="module" src="/app.js"></script>
   </head>
-  <body>
+  <body data-title-key="meta.home.title" data-description-key="meta.home.description">
     <main class="page-shell">
       <header class="site-header">
-        <a class="brand" href="/" aria-label="Text to Image Studio 首頁">
+        <a class="brand" href="/" data-i18n-aria-label="brand.homeLabel" aria-label="文字轉圖片工作室首頁">
           <span class="brand-mark" aria-hidden="true">TI</span>
           <span>Text to Image Studio</span>
         </a>
-        <a
-          class="header-link"
-          href="https://developers.openai.com/api/docs/guides/image-generation"
-          target="_blank"
-          rel="noreferrer"
-        >
-          API 文件
-          <span aria-hidden="true">↗</span>
-        </a>
+        <div class="header-actions">
+          <nav class="header-nav" data-i18n-aria-label="nav.primaryLabel" aria-label="主要導覽">
+            <a class="header-link" href="/transparency.html" data-i18n="nav.transparency">透明中心</a>
+            <a
+              class="header-link api-link"
+              href="https://developers.openai.com/api/docs/guides/image-generation"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span data-i18n="nav.apiGuide">API 指南</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </nav>
+          <div class="language-switcher" role="group" data-i18n-aria-label="locale.label" aria-label="選擇介面語言">
+            <button class="language-button" type="button" data-locale="zh-Hant" aria-pressed="true" data-i18n="locale.zh">繁中</button>
+            <button class="language-button" type="button" data-locale="en" aria-pressed="false" data-i18n="locale.en">EN</button>
+          </div>
+        </div>
       </header>
 
       <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">OPEN SOURCE · IMAGE LAB</p>
-        <h1 id="page-title">把一句想法，變成一張圖片。</h1>
-        <p class="intro-copy">
-          輸入你腦中的畫面，這個範例會安全地從伺服器呼叫 OpenAI Image API，
-          並將結果帶回瀏覽器。
+        <p class="eyebrow" data-i18n="home.eyebrow">開放原始碼・圖片實驗室</p>
+        <h1 id="page-title" data-i18n="home.title">把文字想法變成一張圖片</h1>
+        <p class="intro-copy" data-i18n="home.intro">
+          直接輸入完整描述，或使用選填的提示組合器。只有按下產生後，提示才會經由本機伺服器送往 OpenAI Image API。
         </p>
       </section>
 
-      <section class="workspace" aria-label="圖片產生工作區">
+      <section class="workspace" data-i18n-aria-label="home.workspaceLabel" aria-label="圖片產生工作區">
         <div class="prompt-panel">
           <div class="panel-heading">
             <div>
-              <p class="step-label">01 · DESCRIBE</p>
-              <h2>描述想產生的畫面</h2>
+              <p class="step-label" data-i18n="prompt.step">01 ・ 描述</p>
+              <h2 data-i18n="prompt.title">描述你想產生的畫面</h2>
             </div>
             <span class="model-badge">GPT Image 2</span>
           </div>
 
           <form id="image-form" novalidate>
             <div class="field-heading">
-              <label for="prompt">圖片提示文字</label>
+              <label for="prompt" data-i18n="prompt.label">圖片提示</label>
               <span id="character-count" aria-live="polite">0 / 1000</span>
             </div>
             <textarea
@@ -58,86 +66,91 @@
               rows="8"
               required
               aria-describedby="prompt-hint"
-              placeholder="例如：清晨的台北街角，一間溫暖的小咖啡店，窗外下著細雨，電影感攝影"
+              data-i18n-placeholder="prompt.placeholder"
+              placeholder="例如：一隻穿黃色雨衣的柴犬，在台北雨夜街道，電影感霓虹光線，細緻攝影風格"
             ></textarea>
-            <p id="prompt-hint" class="field-hint">
-              建議包含主體、場景、光線與風格。每次產生一張 1024 × 1024 PNG 圖片。
+            <p id="prompt-hint" class="field-hint" data-i18n="prompt.hint">
+              請勿輸入秘密、個人資料或機密內容。輸出為 1024 × 1024 PNG 圖片。
             </p>
+
             <details id="prompt-builder" class="prompt-builder">
-              <summary>需要靈感？使用提示詞建構器</summary>
+              <summary data-i18n="builder.summary">選填：使用提示組合器</summary>
               <div class="builder-content">
-                <p class="builder-intro">
-                  所有組合都只在這個瀏覽器頁面中進行；按下「套用」不會傳送資料。
+                <p class="builder-intro" data-i18n="builder.intro">
+                  這些選項只在目前頁面組合文字，不會呼叫 API。你仍可在套用後自由修改完整提示。
                 </p>
                 <div class="builder-grid">
                   <label class="builder-field builder-subject" for="builder-subject">
-                    主體
+                    <span data-i18n="builder.subject.label">主體</span>
                     <input
                       id="builder-subject"
                       name="builder-subject"
                       type="text"
                       maxlength="200"
-                      placeholder="例如：一隻正在閱讀的橘貓"
+                      data-i18n-placeholder="builder.subject.placeholder"
+                      placeholder="例如：一隻穿雨衣的柴犬"
                     >
                   </label>
                   <label class="builder-field" for="builder-scene">
-                    場景
+                    <span data-i18n="builder.scene.label">場景</span>
                     <select id="builder-scene" name="builder-scene">
-                      <option value="">不指定</option>
-                      <option value="雨中的台北街道">雨中的台北街道</option>
-                      <option value="清晨的森林">清晨的森林</option>
-                      <option value="溫暖的小咖啡店">溫暖的小咖啡店</option>
-                      <option value="未來城市">未來城市</option>
-                      <option value="極簡攝影棚">極簡攝影棚</option>
+                      <option value="" data-i18n="builder.option.none">不指定</option>
+                      <option value="taipei-rain" data-i18n="builder.scene.taipei-rain.label" data-prompt-key="builder.scene.taipei-rain.prompt">台北雨夜街道</option>
+                      <option value="forest-dawn" data-i18n="builder.scene.forest-dawn.label" data-prompt-key="builder.scene.forest-dawn.prompt">黎明森林</option>
+                      <option value="cafe-warm" data-i18n="builder.scene.cafe-warm.label" data-prompt-key="builder.scene.cafe-warm.prompt">溫暖咖啡館</option>
+                      <option value="future-city" data-i18n="builder.scene.future-city.label" data-prompt-key="builder.scene.future-city.prompt">未來城市</option>
+                      <option value="studio-minimal" data-i18n="builder.scene.studio-minimal.label" data-prompt-key="builder.scene.studio-minimal.prompt">極簡攝影棚</option>
                     </select>
                   </label>
                   <label class="builder-field" for="builder-lighting">
-                    光線
+                    <span data-i18n="builder.lighting.label">光線</span>
                     <select id="builder-lighting" name="builder-lighting">
-                      <option value="">不指定</option>
-                      <option value="柔和自然光">柔和自然光</option>
-                      <option value="黃金時刻的暖光">黃金時刻的暖光</option>
-                      <option value="電影感霓虹燈光">電影感霓虹燈光</option>
-                      <option value="高對比側光">高對比側光</option>
-                      <option value="安靜的月光">安靜的月光</option>
+                      <option value="" data-i18n="builder.option.none">不指定</option>
+                      <option value="soft-natural" data-i18n="builder.lighting.soft-natural.label" data-prompt-key="builder.lighting.soft-natural.prompt">柔和自然光</option>
+                      <option value="golden-hour" data-i18n="builder.lighting.golden-hour.label" data-prompt-key="builder.lighting.golden-hour.prompt">黃金時刻</option>
+                      <option value="neon-cinematic" data-i18n="builder.lighting.neon-cinematic.label" data-prompt-key="builder.lighting.neon-cinematic.prompt">電影感霓虹</option>
+                      <option value="side-high-contrast" data-i18n="builder.lighting.side-high-contrast.label" data-prompt-key="builder.lighting.side-high-contrast.prompt">高對比側光</option>
+                      <option value="moonlight" data-i18n="builder.lighting.moonlight.label" data-prompt-key="builder.lighting.moonlight.prompt">月光</option>
                     </select>
                   </label>
                   <label class="builder-field" for="builder-style">
-                    風格
+                    <span data-i18n="builder.style.label">風格</span>
                     <select id="builder-style" name="builder-style">
-                      <option value="">不指定</option>
-                      <option value="寫實攝影風格">寫實攝影</option>
-                      <option value="水彩插畫風格">水彩插畫</option>
-                      <option value="復古海報風格">復古海報</option>
-                      <option value="極簡設計風格">極簡設計</option>
-                      <option value="黏土動畫風格">黏土動畫</option>
+                      <option value="" data-i18n="builder.option.none">不指定</option>
+                      <option value="realistic-photo" data-i18n="builder.style.realistic-photo.label" data-prompt-key="builder.style.realistic-photo.prompt">寫實攝影</option>
+                      <option value="watercolor" data-i18n="builder.style.watercolor.label" data-prompt-key="builder.style.watercolor.prompt">水彩插畫</option>
+                      <option value="vintage-poster" data-i18n="builder.style.vintage-poster.label" data-prompt-key="builder.style.vintage-poster.prompt">復古海報</option>
+                      <option value="minimal-design" data-i18n="builder.style.minimal-design.label" data-prompt-key="builder.style.minimal-design.prompt">極簡設計</option>
+                      <option value="clay-animation" data-i18n="builder.style.clay-animation.label" data-prompt-key="builder.style.clay-animation.prompt">黏土動畫</option>
                     </select>
                   </label>
                   <label class="builder-field" for="builder-composition">
-                    構圖
+                    <span data-i18n="builder.composition.label">構圖</span>
                     <select id="builder-composition" name="builder-composition">
-                      <option value="">不指定</option>
-                      <option value="主體置中構圖">主體置中</option>
-                      <option value="廣角全景構圖">廣角全景</option>
-                      <option value="近距離特寫構圖">近距離特寫</option>
-                      <option value="低角度視角">低角度視角</option>
-                      <option value="對稱構圖">對稱構圖</option>
+                      <option value="" data-i18n="builder.option.none">不指定</option>
+                      <option value="centered" data-i18n="builder.composition.centered.label" data-prompt-key="builder.composition.centered.prompt">主體置中</option>
+                      <option value="wide" data-i18n="builder.composition.wide.label" data-prompt-key="builder.composition.wide.prompt">寬景構圖</option>
+                      <option value="close-up" data-i18n="builder.composition.close-up.label" data-prompt-key="builder.composition.close-up.prompt">近距離特寫</option>
+                      <option value="low-angle" data-i18n="builder.composition.low-angle.label" data-prompt-key="builder.composition.low-angle.prompt">低角度視角</option>
+                      <option value="symmetrical" data-i18n="builder.composition.symmetrical.label" data-prompt-key="builder.composition.symmetrical.prompt">對稱構圖</option>
                     </select>
                   </label>
                 </div>
                 <div class="builder-actions">
                   <p id="builder-status" class="builder-status" aria-live="polite"></p>
-                  <button id="apply-builder-button" class="secondary-button" type="button">
-                    套用至提示文字
+                  <button id="apply-builder-button" class="secondary-button" type="button" data-i18n="builder.actions.apply">
+                    套用到完整提示
                   </button>
                 </div>
               </div>
             </details>
+
             <aside class="privacy-note" aria-labelledby="privacy-note-title">
-              <p id="privacy-note-title" class="privacy-note-title">隱私提醒</p>
-              <p>
-                提示文字會在你按下產生後傳送至 OpenAI。本專案不會將提示文字或圖片保存到資料庫，也不包含分析或追蹤工具。
+              <p id="privacy-note-title" class="privacy-note-title" data-i18n="privacy.note.title">資料流提醒</p>
+              <p data-i18n="privacy.note.body">
+                提示只在按下產生後送到本機伺服器，再轉送 OpenAI。本程式不加入提示、圖片或語言選擇的永久儲存。
               </p>
+              <a href="/transparency.html" data-i18n="privacy.note.link">查看可驗證的透明中心</a>
             </aside>
 
             <p id="error-message" class="error-message" role="alert" tabindex="-1" hidden></p>
@@ -146,11 +159,11 @@
             <div class="form-actions">
               <p class="cost-note">
                 <span aria-hidden="true">◇</span>
-                API 呼叫可能產生費用
+                <span data-i18n="form.cost">使用 API 會產生費用</span>
               </p>
               <button id="generate-button" class="primary-button" type="submit" disabled>
-                <span class="button-label">產生圖片</span>
-                <span class="button-progress" aria-hidden="true">產生中…</span>
+                <span class="button-label" data-i18n="actions.generate">產生圖片</span>
+                <span class="button-progress" aria-hidden="true" data-i18n="actions.generating">產生中…</span>
                 <span class="button-arrow" aria-hidden="true">→</span>
               </button>
             </div>
@@ -160,88 +173,59 @@
         <div class="result-panel" aria-labelledby="result-title">
           <div class="panel-heading result-heading">
             <div>
-              <p class="step-label">02 · RESULT</p>
-              <h2 id="result-title">產生結果</h2>
+              <p class="step-label" data-i18n="result.step">02 ・ 結果</p>
+              <h2 id="result-title" data-i18n="result.title">產生結果</h2>
             </div>
             <div class="result-actions">
-              <button id="clear-button" class="clear-button" type="button" hidden>清除畫面</button>
-              <span class="status-dot">準備就緒</span>
+              <button id="clear-button" class="clear-button" type="button" hidden data-i18n="result.clear">清除畫面</button>
+              <span class="status-dot" data-i18n="result.ready">準備完成</span>
             </div>
           </div>
 
           <div id="empty-state" class="empty-state">
-            <svg viewBox="0 0 120 120" role="img" aria-label="等待產生圖片">
+            <svg viewBox="0 0 120 120" role="img" data-i18n-aria-label="result.emptyAlt" aria-label="等待產生圖片的預留圖示">
               <rect x="18" y="18" width="84" height="84" rx="5"></rect>
               <circle cx="76" cy="43" r="9"></circle>
               <path d="M27 90 50 64l14 15 10-10 19 21"></path>
               <path class="spark" d="M20 7v9M15.5 11.5h9"></path>
               <path class="spark" d="M106 88v12M100 94h12"></path>
             </svg>
-            <h3>你的圖片會出現在這裡</h3>
-            <p>先在左側輸入至少 3 個字元的提示文字。</p>
+            <h3 data-i18n="result.emptyTitle">你的圖片會出現在這裡</h3>
+            <p data-i18n="result.emptyBody">在左側輸入至少 3 個字元的提示，然後按下產生圖片。</p>
           </div>
 
           <figure id="result-figure" class="result-figure" hidden>
-            <img id="result-image" alt="依提示文字產生的圖片" tabindex="-1">
+            <img id="result-image" data-i18n-alt="result.imageAlt" alt="依照提示產生的圖片" tabindex="-1">
             <figcaption id="result-caption"></figcaption>
           </figure>
 
-          <div
-            id="export-actions"
-            class="export-actions"
-            role="group"
-            aria-label="成果匯出"
-            hidden
-          >
-            <button id="download-image" class="action-button" type="button">下載 PNG</button>
-            <button id="copy-prompt" class="action-button" type="button">複製提示文字</button>
-            <button id="download-receipt" class="action-button" type="button">下載隱私收據</button>
+          <div id="export-actions" class="export-actions" role="group" data-i18n-aria-label="export.groupLabel" aria-label="結果匯出" hidden>
+            <button id="download-image" class="action-button" type="button" data-i18n="export.image">下載 PNG</button>
+            <button id="copy-prompt" class="action-button" type="button" data-i18n="export.prompt">複製提示</button>
+            <button id="download-receipt" class="action-button" type="button" data-i18n="export.receipt">下載隱私收據</button>
           </div>
 
-          <section
-            id="privacy-receipt"
-            class="privacy-receipt"
-            aria-labelledby="privacy-receipt-title"
-            hidden
-          >
-            <p class="step-label">03 · PRIVACY RECEIPT</p>
-            <h3 id="privacy-receipt-title">這次產生發生了什麼？</h3>
-            <p class="receipt-intro">
-              收據只存在目前頁面。下載的文字檔會包含完整提示文字，請由你自行妥善保存。
+          <section id="privacy-receipt" class="privacy-receipt" aria-labelledby="privacy-receipt-title" hidden>
+            <p class="step-label" data-i18n="receipt.step">03 ・ 隱私收據</p>
+            <h3 id="privacy-receipt-title" data-i18n="receipt.title">這次產生的資料摘要</h3>
+            <p class="receipt-intro" data-i18n="receipt.intro">
+              收據顯示本次實際送出的提示與本程式的儲存邊界；它不是第三方認證。
             </p>
             <dl class="receipt-list">
-              <div>
-                <dt>傳送內容</dt>
-                <dd id="receipt-prompt"></dd>
-              </div>
-              <div>
-                <dt>接收服務</dt>
-                <dd>OpenAI Image API</dd>
-              </div>
-              <div>
-                <dt>模型</dt>
-                <dd>gpt-image-2</dd>
-              </div>
-              <div>
-                <dt>產生時間</dt>
-                <dd id="receipt-created-at"></dd>
-              </div>
-              <div>
-                <dt>本程式保存</dt>
-                <dd>不會持久保存提示文字或產生圖片。</dd>
-              </div>
-              <div>
-                <dt>清除限制</dt>
-                <dd>清除目前頁面無法撤回已傳送至 OpenAI 的資料。</dd>
-              </div>
+              <div><dt data-i18n="receipt.prompt.label">實際提示</dt><dd id="receipt-prompt"></dd></div>
+              <div><dt data-i18n="receipt.service.label">外部服務</dt><dd>OpenAI Image API</dd></div>
+              <div><dt data-i18n="receipt.model.label">模型</dt><dd>gpt-image-2</dd></div>
+              <div><dt data-i18n="receipt.created.label">產生時間</dt><dd id="receipt-created-at"></dd></div>
+              <div><dt data-i18n="receipt.storage.label">本程式儲存</dt><dd data-i18n="receipt.storage.value">不會加入資料庫、分析工具或瀏覽器儲存。</dd></div>
+              <div><dt data-i18n="receipt.clear.label">清除限制</dt><dd data-i18n="receipt.clear.value">清除頁面無法撤回已送往 OpenAI 的資料或使用者另存的副本。</dd></div>
             </dl>
           </section>
         </div>
       </section>
 
       <footer class="site-footer">
-        <p>Privacy-first guided creation · Open source</p>
-        <p>API Key 只存在伺服器端，不會傳送到瀏覽器。</p>
+        <p data-i18n="footer.project">隱私優先的引導式創作・開放原始碼</p>
+        <p data-i18n="footer.key">API Key 只保留在本機伺服器，不會送到瀏覽器。</p>
       </footer>
     </main>
   </body>

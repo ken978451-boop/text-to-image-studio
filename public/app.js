@@ -3,13 +3,15 @@ import {
   composePrompt,
   createExportFilename,
 } from "./prompt-tools.js";
+import {
+  applyTranslations,
+  DEFAULT_LOCALE,
+  normalizeLocale,
+  translate,
+  translationKeyForApiError,
+} from "./translations.js";
 
 const modelName = "gpt-image-2";
-const receiptDateFormatter = new Intl.DateTimeFormat("zh-TW", {
-  dateStyle: "medium",
-  timeStyle: "medium",
-});
-
 const form = document.querySelector("#image-form");
 const promptInput = document.querySelector("#prompt");
 const characterCount = document.querySelector("#character-count");
@@ -36,6 +38,7 @@ const builderStyle = document.querySelector("#builder-style");
 const builderComposition = document.querySelector("#builder-composition");
 const builderStatus = document.querySelector("#builder-status");
 const applyBuilderButton = document.querySelector("#apply-builder-button");
+const languageButtons = [...document.querySelectorAll("[data-locale]")];
 const builderControls = [
   builderSubject,
   builderScene,
@@ -43,15 +46,94 @@ const builderControls = [
   builderStyle,
   builderComposition,
 ];
+
+let currentLocale = DEFAULT_LOCALE;
 let lastAppliedPrompt = "";
 let currentGeneratedPrompt = "";
 let currentReceipt = "";
 let currentCreatedAt;
+let currentStatusKey = "";
+let currentStatusValues = {};
+let currentErrorKey = "";
+let currentBuilderStatusKey = "";
+
+class LocalizedError extends Error {
+  constructor(translationKey) {
+    super(translationKey);
+    this.translationKey = translationKey;
+  }
+}
+
+function formatReceiptDate(date) {
+  const locale = currentLocale === "en" ? "en-US" : "zh-TW";
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "medium",
+  }).format(date);
+}
+
+function setStatus(key, values = {}) {
+  currentStatusKey = key;
+  currentStatusValues = values;
+  status.textContent = key ? translate(currentLocale, key, values) : "";
+}
+
+function setBuilderStatus(key) {
+  currentBuilderStatusKey = key;
+  builderStatus.textContent = key ? translate(currentLocale, key) : "";
+}
+
+function showErrorKey(key) {
+  currentErrorKey = key;
+  const message = translate(currentLocale, key);
+  errorMessage.textContent = message;
+  errorMessage.hidden = false;
+  setStatus("status.failed", { message });
+  errorMessage.focus();
+}
+
+function clearError() {
+  currentErrorKey = "";
+  errorMessage.textContent = "";
+  errorMessage.hidden = true;
+}
+
+function renderDynamicContent() {
+  if (currentGeneratedPrompt) {
+    resultCaption.textContent = translate(currentLocale, "result.caption", {
+      prompt: currentGeneratedPrompt,
+    });
+  }
+  if (currentCreatedAt) {
+    receiptCreatedAt.textContent = formatReceiptDate(currentCreatedAt);
+    currentReceipt = buildPrivacyReceipt({
+      prompt: currentGeneratedPrompt,
+      model: modelName,
+      createdAt: currentCreatedAt,
+      locale: currentLocale,
+    });
+  }
+  if (currentBuilderStatusKey) {
+    builderStatus.textContent = translate(currentLocale, currentBuilderStatusKey);
+  }
+  if (currentErrorKey) {
+    const message = translate(currentLocale, currentErrorKey);
+    errorMessage.textContent = message;
+    status.textContent = translate(currentLocale, "status.failed", { message });
+  } else if (currentStatusKey) {
+    status.textContent = translate(currentLocale, currentStatusKey, currentStatusValues);
+  }
+}
+
+function setLocale(locale) {
+  currentLocale = normalizeLocale(locale);
+  applyTranslations(currentLocale);
+  renderDynamicContent();
+}
 
 function updatePromptState() {
   const length = promptInput.value.length;
   const isValid = promptInput.value.trim().length >= 3 && length <= 1000;
-
   characterCount.textContent = `${length} / 1000`;
   generateButton.disabled = !isValid || generateButton.getAttribute("aria-busy") === "true";
 }
@@ -66,23 +148,15 @@ function setBusy(isBusy) {
   }
 
   if (isBusy) {
-    status.textContent = "正在產生圖片，請稍候。";
-    return;
+    setStatus("status.generating");
+  } else {
+    updatePromptState();
   }
-
-  updatePromptState();
 }
 
-function showError(message) {
-  errorMessage.textContent = message;
-  errorMessage.hidden = false;
-  status.textContent = `錯誤：${message}`;
-  errorMessage.focus();
-}
-
-function clearError() {
-  errorMessage.textContent = "";
-  errorMessage.hidden = true;
+function selectedPromptPart(select) {
+  const promptKey = select.selectedOptions[0]?.dataset.promptKey;
+  return promptKey ? translate(currentLocale, promptKey) : "";
 }
 
 function triggerDownload(source, filename) {
@@ -113,39 +187,43 @@ async function copyText(text) {
   }
 }
 
+for (const button of languageButtons) {
+  button.addEventListener("click", () => setLocale(button.dataset.locale));
+}
+
 promptInput.addEventListener("input", () => {
   updatePromptState();
-  builderStatus.textContent = "";
+  setBuilderStatus("");
 });
 
 applyBuilderButton.addEventListener("click", () => {
-  const composedPrompt = composePrompt({
-    subject: builderSubject.value,
-    scene: builderScene.value,
-    lighting: builderLighting.value,
-    style: builderStyle.value,
-    composition: builderComposition.value,
-  });
+  const composedPrompt = composePrompt(
+    {
+      subject: builderSubject.value,
+      scene: selectedPromptPart(builderScene),
+      lighting: selectedPromptPart(builderLighting),
+      style: selectedPromptPart(builderStyle),
+      composition: selectedPromptPart(builderComposition),
+    },
+    { separator: translate(currentLocale, "prompt.separator") },
+  );
 
   if (!composedPrompt) {
-    builderStatus.textContent = "請至少填寫一個項目。";
+    setBuilderStatus("builder.status.missing");
     builderSubject.focus();
     return;
   }
 
   const currentPrompt = promptInput.value.trim();
   const hasManualChanges = currentPrompt && currentPrompt !== lastAppliedPrompt;
-  if (
-    hasManualChanges &&
-    !window.confirm("套用建構器內容會取代目前的提示文字。確定要繼續嗎？")
-  ) {
-    builderStatus.textContent = "已保留目前的提示文字。";
+  if (hasManualChanges && !window.confirm(translate(currentLocale, "builder.status.confirm"))) {
+    setBuilderStatus("builder.status.cancelled");
     return;
   }
 
   promptInput.value = composedPrompt;
   lastAppliedPrompt = composedPrompt;
-  builderStatus.textContent = "已套用，你仍可直接修改提示文字。";
+  setBuilderStatus("builder.status.applied");
   clearError();
   updatePromptState();
   promptInput.focus();
@@ -156,8 +234,8 @@ form.addEventListener("submit", async (event) => {
   clearError();
 
   const prompt = promptInput.value.trim();
-  if (prompt.length < 3) {
-    showError("提示文字至少需要 3 個字元。");
+  if (prompt.length < 3 || prompt.length > 1000) {
+    showErrorKey("errors.validation");
     return;
   }
 
@@ -172,35 +250,29 @@ form.addEventListener("submit", async (event) => {
     const body = await response.json();
 
     if (!response.ok) {
-      throw new Error(body?.error?.message ?? "目前無法產生圖片，請稍後再試。");
+      throw new LocalizedError(translationKeyForApiError(body?.error?.code));
     }
 
     const imageBase64 = body?.data?.imageBase64;
     const mimeType = body?.data?.mimeType;
     if (typeof imageBase64 !== "string" || mimeType !== "image/png") {
-      throw new Error("伺服器回傳了無法顯示的圖片資料。");
+      throw new LocalizedError("errors.invalidImage");
     }
 
     resultImage.src = `data:${mimeType};base64,${imageBase64}`;
-    resultCaption.textContent = `提示：${prompt}`;
     currentGeneratedPrompt = prompt;
     currentCreatedAt = new Date();
-    currentReceipt = buildPrivacyReceipt({
-      prompt,
-      model: modelName,
-      createdAt: currentCreatedAt,
-    });
     receiptPrompt.textContent = prompt;
-    receiptCreatedAt.textContent = receiptDateFormatter.format(currentCreatedAt);
     emptyState.hidden = true;
     resultFigure.hidden = false;
     exportActions.hidden = false;
     privacyReceipt.hidden = false;
     clearButton.hidden = false;
-    status.textContent = "圖片已產生完成。";
+    renderDynamicContent();
+    setStatus("status.generated");
     resultImage.focus();
   } catch (error) {
-    showError(error instanceof Error ? error.message : "目前無法產生圖片，請稍後再試。");
+    showErrorKey(error instanceof LocalizedError ? error.translationKey : "errors.generic");
   } finally {
     setBusy(false);
   }
@@ -209,42 +281,39 @@ form.addEventListener("submit", async (event) => {
 downloadImageButton.addEventListener("click", () => {
   const imageSource = resultImage.getAttribute("src");
   if (!imageSource?.startsWith("data:image/png;base64,") || !currentCreatedAt) {
-    showError("目前沒有可下載的圖片。");
+    showErrorKey("errors.noImage");
     return;
   }
 
   triggerDownload(imageSource, createExportFilename("image", currentCreatedAt));
-  status.textContent = "圖片下載已開始。";
+  setStatus("status.imageDownloaded");
 });
 
 copyPromptButton.addEventListener("click", async () => {
   if (!currentGeneratedPrompt) {
-    showError("目前沒有可複製的提示文字。");
+    showErrorKey("errors.noPrompt");
     return;
   }
 
   try {
     await copyText(currentGeneratedPrompt);
-    status.textContent = "提示文字已複製。";
+    setStatus("status.promptCopied");
   } catch {
-    showError("瀏覽器不允許自動複製，請直接從收據選取提示文字。");
+    showErrorKey("errors.copyFailed");
   }
 });
 
 downloadReceiptButton.addEventListener("click", () => {
   if (!currentReceipt || !currentCreatedAt) {
-    showError("目前沒有可下載的隱私收據。");
+    showErrorKey("errors.noReceipt");
     return;
   }
 
   const receiptFile = new Blob([currentReceipt], { type: "text/plain;charset=utf-8" });
   const receiptUrl = URL.createObjectURL(receiptFile);
-  triggerDownload(
-    receiptUrl,
-    createExportFilename("privacy-receipt", currentCreatedAt),
-  );
+  triggerDownload(receiptUrl, createExportFilename("privacy-receipt", currentCreatedAt));
   setTimeout(() => URL.revokeObjectURL(receiptUrl), 0);
-  status.textContent = "隱私收據下載已開始。";
+  setStatus("status.receiptDownloaded");
 });
 
 clearButton.addEventListener("click", () => {
@@ -253,7 +322,7 @@ clearButton.addEventListener("click", () => {
     control.value = "";
   }
   promptBuilder.open = false;
-  builderStatus.textContent = "";
+  setBuilderStatus("");
   lastAppliedPrompt = "";
   resultImage.removeAttribute("src");
   resultCaption.textContent = "";
@@ -268,9 +337,10 @@ clearButton.addEventListener("click", () => {
   emptyState.hidden = false;
   clearButton.hidden = true;
   clearError();
-  status.textContent = "提示文字與圖片已從畫面清除。";
+  setStatus("status.cleared");
   updatePromptState();
   promptInput.focus();
 });
 
+setLocale(DEFAULT_LOCALE);
 updatePromptState();

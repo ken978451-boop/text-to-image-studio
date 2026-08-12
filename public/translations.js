@@ -8,6 +8,7 @@ const messages = {
   "meta.transparency.description": ["查看文字轉圖片工作室的資料流、保護措施、限制與可驗證來源。", "Inspect the studio's data flow, safeguards, limitations, and verifiable sources."],
   "brand.homeLabel": ["文字轉圖片工作室首頁", "Text to Image Studio home"],
   "nav.transparency": ["透明中心", "Transparency"],
+  "nav.primaryLabel": ["主要導覽", "Primary navigation"],
   "nav.apiGuide": ["API 指南", "API guide"],
   "nav.external": ["在新分頁開啟", "opens in a new tab"],
   "nav.backToStudio": ["返回工作室", "Back to studio"],
@@ -191,3 +192,53 @@ export function translate(locale, key, replacements = {}) {
   );
 }
 
+const apiErrorKeys = {
+  VALIDATION_ERROR: "errors.validation",
+  RATE_LIMITED: "errors.rateLimited",
+  IMAGE_GENERATION_FAILED: "errors.generationFailed",
+  PAYLOAD_TOO_LARGE: "errors.payloadTooLarge",
+  INVALID_JSON: "errors.invalidJson",
+  INTERNAL_ERROR: "errors.internal",
+};
+
+export function translationKeyForApiError(code) {
+  return apiErrorKeys[code] ?? "errors.generic";
+}
+
+export function applyTranslations(locale, root = document) {
+  const normalizedLocale = normalizeLocale(locale);
+  root.documentElement.lang = normalizedLocale;
+
+  const titleKey = root.body?.dataset.titleKey;
+  if (titleKey) {
+    root.title = translate(normalizedLocale, titleKey);
+  }
+
+  const descriptionKey = root.body?.dataset.descriptionKey;
+  const description = root.querySelector('meta[name="description"]');
+  if (descriptionKey && description) {
+    description.content = translate(normalizedLocale, descriptionKey);
+  }
+
+  for (const element of root.querySelectorAll("[data-i18n]")) {
+    element.textContent = translate(normalizedLocale, element.dataset.i18n);
+  }
+
+  const translatedAttributes = [
+    ["[data-i18n-placeholder]", "i18nPlaceholder", "placeholder"],
+    ["[data-i18n-aria-label]", "i18nAriaLabel", "aria-label"],
+    ["[data-i18n-alt]", "i18nAlt", "alt"],
+    ["[data-i18n-title]", "i18nTitle", "title"],
+  ];
+  for (const [selector, datasetKey, attribute] of translatedAttributes) {
+    for (const element of root.querySelectorAll(selector)) {
+      element.setAttribute(attribute, translate(normalizedLocale, element.dataset[datasetKey]));
+    }
+  }
+
+  for (const button of root.querySelectorAll("[data-locale]")) {
+    button.setAttribute("aria-pressed", String(button.dataset.locale === normalizedLocale));
+  }
+
+  return normalizedLocale;
+}
