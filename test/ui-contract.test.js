@@ -19,8 +19,8 @@ describe("browser UI contract", () => {
     const html = await readFile(new URL("public/index.html", projectRoot), "utf8");
     const script = await readFile(new URL("public/app.js", projectRoot), "utf8");
 
-    assert.match(html, /<script src="\/app\.js" defer><\/script>/);
-    assert.doesNotMatch(html, /<script(?! src=)/);
+    assert.match(html, /<script type="module" src="\/app\.js"><\/script>/);
+    assert.doesNotMatch(html, /<script(?![^>]*\bsrc=)[^>]*>/);
     assert.doesNotMatch(script, /innerHTML|insertAdjacentHTML|document\.write/);
   });
 
@@ -34,5 +34,22 @@ describe("browser UI contract", () => {
     assert.match(script, /resultImage\.removeAttribute\("src"\)/);
     assert.match(script, /promptInput\.value = ""/);
     assert.doesNotMatch(script, /localStorage|sessionStorage|indexedDB/);
+  });
+
+  it("offers an optional browser-only prompt builder without replacing direct entry", async () => {
+    const html = await readFile(new URL("public/index.html", projectRoot), "utf8");
+    const script = await readFile(new URL("public/app.js", projectRoot), "utf8");
+
+    assert.match(html, /<script[^>]+type="module"[^>]+src="\/app\.js"/);
+    assert.match(html, /<details[^>]+id="prompt-builder"/);
+    assert.match(html, /需要靈感？使用提示詞建構器/);
+    assert.match(html, /id="builder-subject"[^>]+maxlength="200"/);
+    for (const field of ["scene", "lighting", "style", "composition"]) {
+      assert.match(html, new RegExp(`<select[^>]+id="builder-${field}"`));
+    }
+    assert.match(html, /所有組合都只在這個瀏覽器頁面中進行/);
+    assert.match(html, /id="apply-builder-button"[^>]+type="button"/);
+    assert.match(script, /import \{[^}]*composePrompt[^}]*\} from "\.\/prompt-tools\.js"/s);
+    assert.match(script, /window\.confirm/);
   });
 });

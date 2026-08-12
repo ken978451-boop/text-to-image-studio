@@ -1,3 +1,5 @@
+import { composePrompt } from "./prompt-tools.js";
+
 const form = document.querySelector("#image-form");
 const promptInput = document.querySelector("#prompt");
 const characterCount = document.querySelector("#character-count");
@@ -9,6 +11,22 @@ const resultFigure = document.querySelector("#result-figure");
 const resultImage = document.querySelector("#result-image");
 const resultCaption = document.querySelector("#result-caption");
 const clearButton = document.querySelector("#clear-button");
+const promptBuilder = document.querySelector("#prompt-builder");
+const builderSubject = document.querySelector("#builder-subject");
+const builderScene = document.querySelector("#builder-scene");
+const builderLighting = document.querySelector("#builder-lighting");
+const builderStyle = document.querySelector("#builder-style");
+const builderComposition = document.querySelector("#builder-composition");
+const builderStatus = document.querySelector("#builder-status");
+const applyBuilderButton = document.querySelector("#apply-builder-button");
+const builderControls = [
+  builderSubject,
+  builderScene,
+  builderLighting,
+  builderStyle,
+  builderComposition,
+];
+let lastAppliedPrompt = "";
 
 function updatePromptState() {
   const length = promptInput.value.length;
@@ -22,6 +40,10 @@ function setBusy(isBusy) {
   generateButton.setAttribute("aria-busy", String(isBusy));
   promptInput.readOnly = isBusy;
   generateButton.disabled = isBusy;
+  applyBuilderButton.disabled = isBusy;
+  for (const control of builderControls) {
+    control.disabled = isBusy;
+  }
 
   if (isBusy) {
     status.textContent = "正在產生圖片，請稍候。";
@@ -43,7 +65,43 @@ function clearError() {
   errorMessage.hidden = true;
 }
 
-promptInput.addEventListener("input", updatePromptState);
+promptInput.addEventListener("input", () => {
+  updatePromptState();
+  builderStatus.textContent = "";
+});
+
+applyBuilderButton.addEventListener("click", () => {
+  const composedPrompt = composePrompt({
+    subject: builderSubject.value,
+    scene: builderScene.value,
+    lighting: builderLighting.value,
+    style: builderStyle.value,
+    composition: builderComposition.value,
+  });
+
+  if (!composedPrompt) {
+    builderStatus.textContent = "請至少填寫一個項目。";
+    builderSubject.focus();
+    return;
+  }
+
+  const currentPrompt = promptInput.value.trim();
+  const hasManualChanges = currentPrompt && currentPrompt !== lastAppliedPrompt;
+  if (
+    hasManualChanges &&
+    !window.confirm("套用建構器內容會取代目前的提示文字。確定要繼續嗎？")
+  ) {
+    builderStatus.textContent = "已保留目前的提示文字。";
+    return;
+  }
+
+  promptInput.value = composedPrompt;
+  lastAppliedPrompt = composedPrompt;
+  builderStatus.textContent = "已套用，你仍可直接修改提示文字。";
+  clearError();
+  updatePromptState();
+  promptInput.focus();
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -91,6 +149,12 @@ form.addEventListener("submit", async (event) => {
 
 clearButton.addEventListener("click", () => {
   promptInput.value = "";
+  for (const control of builderControls) {
+    control.value = "";
+  }
+  promptBuilder.open = false;
+  builderStatus.textContent = "";
+  lastAppliedPrompt = "";
   resultImage.removeAttribute("src");
   resultCaption.textContent = "";
   resultFigure.hidden = true;

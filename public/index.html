@@ -6,7 +6,7 @@
     <meta name="description" content="輸入文字提示，透過 OpenAI Image API 產生圖片的開源範例。">
     <title>Text to Image Studio</title>
     <link rel="stylesheet" href="/styles.css">
-    <script src="/app.js" defer></script>
+    <script type="module" src="/app.js"></script>
   </head>
   <body>
     <main class="page-shell">
@@ -63,6 +63,76 @@
             <p id="prompt-hint" class="field-hint">
               建議包含主體、場景、光線與風格。每次產生一張 1024 × 1024 PNG 圖片。
             </p>
+            <details id="prompt-builder" class="prompt-builder">
+              <summary>需要靈感？使用提示詞建構器</summary>
+              <div class="builder-content">
+                <p class="builder-intro">
+                  所有組合都只在這個瀏覽器頁面中進行；按下「套用」不會傳送資料。
+                </p>
+                <div class="builder-grid">
+                  <label class="builder-field builder-subject" for="builder-subject">
+                    主體
+                    <input
+                      id="builder-subject"
+                      name="builder-subject"
+                      type="text"
+                      maxlength="200"
+                      placeholder="例如：一隻正在閱讀的橘貓"
+                    >
+                  </label>
+                  <label class="builder-field" for="builder-scene">
+                    場景
+                    <select id="builder-scene" name="builder-scene">
+                      <option value="">不指定</option>
+                      <option value="雨中的台北街道">雨中的台北街道</option>
+                      <option value="清晨的森林">清晨的森林</option>
+                      <option value="溫暖的小咖啡店">溫暖的小咖啡店</option>
+                      <option value="未來城市">未來城市</option>
+                      <option value="極簡攝影棚">極簡攝影棚</option>
+                    </select>
+                  </label>
+                  <label class="builder-field" for="builder-lighting">
+                    光線
+                    <select id="builder-lighting" name="builder-lighting">
+                      <option value="">不指定</option>
+                      <option value="柔和自然光">柔和自然光</option>
+                      <option value="黃金時刻的暖光">黃金時刻的暖光</option>
+                      <option value="電影感霓虹燈光">電影感霓虹燈光</option>
+                      <option value="高對比側光">高對比側光</option>
+                      <option value="安靜的月光">安靜的月光</option>
+                    </select>
+                  </label>
+                  <label class="builder-field" for="builder-style">
+                    風格
+                    <select id="builder-style" name="builder-style">
+                      <option value="">不指定</option>
+                      <option value="寫實攝影風格">寫實攝影</option>
+                      <option value="水彩插畫風格">水彩插畫</option>
+                      <option value="復古海報風格">復古海報</option>
+                      <option value="極簡設計風格">極簡設計</option>
+                      <option value="黏土動畫風格">黏土動畫</option>
+                    </select>
+                  </label>
+                  <label class="builder-field" for="builder-composition">
+                    構圖
+                    <select id="builder-composition" name="builder-composition">
+                      <option value="">不指定</option>
+                      <option value="主體置中構圖">主體置中</option>
+                      <option value="廣角全景構圖">廣角全景</option>
+                      <option value="近距離特寫構圖">近距離特寫</option>
+                      <option value="低角度視角">低角度視角</option>
+                      <option value="對稱構圖">對稱構圖</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="builder-actions">
+                  <p id="builder-status" class="builder-status" aria-live="polite"></p>
+                  <button id="apply-builder-button" class="secondary-button" type="button">
+                    套用至提示文字
+                  </button>
+                </div>
+              </div>
+            </details>
             <aside class="privacy-note" aria-labelledby="privacy-note-title">
               <p id="privacy-note-title" class="privacy-note-title">隱私提醒</p>
               <p>

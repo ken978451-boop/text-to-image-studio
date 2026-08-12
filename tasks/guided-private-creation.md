@@ -8,9 +8,9 @@
 
 ## Slice 2: Optional prompt builder
 
-- [ ] Add accessible builder controls and local-only disclosure.
-- [ ] Apply the composed prompt without unexpected overwrites.
-- [ ] Verify direct prompt entry remains unchanged.
+- [x] Add accessible builder controls and local-only disclosure.
+- [x] Apply the composed prompt without unexpected overwrites.
+- [x] Verify direct prompt entry remains unchanged.
 
 ## Slice 3: Receipt and exports
 

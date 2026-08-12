@@ -31,6 +31,8 @@ body {
 }
 
 button,
+input,
+select,
 textarea {
   font: inherit;
 }
@@ -200,6 +202,9 @@ textarea::placeholder {
 textarea:focus-visible,
 button:focus-visible,
 a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
 img:focus-visible {
   outline: 3px solid rgb(15 118 110 / 30%);
   outline-offset: 3px;
@@ -218,6 +223,109 @@ textarea:focus {
 
 .field-hint {
   margin: 10px 0 0;
+}
+
+.prompt-builder {
+  margin-top: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.prompt-builder summary {
+  min-height: 44px;
+  padding: 12px 16px;
+  color: var(--accent-dark);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.prompt-builder summary::marker {
+  color: var(--accent);
+}
+
+.builder-content {
+  padding: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.builder-intro {
+  margin: 0 0 16px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.builder-field {
+  display: grid;
+  gap: 7px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.builder-subject {
+  grid-column: 1 / -1;
+}
+
+.builder-field input,
+.builder-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.builder-field input:focus,
+.builder-field select:focus {
+  border-color: var(--accent);
+}
+
+.builder-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.builder-status {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.secondary-button {
+  min-height: 44px;
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  border: 1px solid #b2d8d1;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: #c7e5df;
+}
+
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .privacy-note {
@@ -464,9 +572,18 @@ textarea:focus {
   }
 
   .form-actions,
+  .builder-actions,
   .site-footer {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .builder-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-subject {
+    grid-column: auto;
   }
 
   .primary-button {
