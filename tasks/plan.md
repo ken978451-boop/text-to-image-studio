@@ -36,7 +36,7 @@ Evolve Text to Image Studio into a privacy-first, local OpenAI Image API referen
 - [x] Full test suite passes.
 - [x] Dependency audit has no vulnerabilities.
 - [x] Secret scan shows no credentials or personal application data.
-- [ ] Changes are reviewed, committed, and published to GitHub.
+- [x] Changes are reviewed, committed, and published to GitHub.
 
 ## Risks and Mitigations
 

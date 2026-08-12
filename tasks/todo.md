@@ -9,4 +9,4 @@
 - [x] Explain the external OpenAI data flow in the interface.
 - [x] Add privacy, security, threat-model, and contribution documents.
 - [x] Run tests, dependency audit, and secret checks.
-- [ ] Review and publish the privacy-first update.
+- [x] Review and publish the privacy-first update.
