@@ -1,4 +1,14 @@
-import { composePrompt } from "./prompt-tools.js";
+import {
+  buildPrivacyReceipt,
+  composePrompt,
+  createExportFilename,
+} from "./prompt-tools.js";
+
+const modelName = "gpt-image-2";
+const receiptDateFormatter = new Intl.DateTimeFormat("zh-TW", {
+  dateStyle: "medium",
+  timeStyle: "medium",
+});
 
 const form = document.querySelector("#image-form");
 const promptInput = document.querySelector("#prompt");
@@ -11,6 +21,13 @@ const resultFigure = document.querySelector("#result-figure");
 const resultImage = document.querySelector("#result-image");
 const resultCaption = document.querySelector("#result-caption");
 const clearButton = document.querySelector("#clear-button");
+const exportActions = document.querySelector("#export-actions");
+const downloadImageButton = document.querySelector("#download-image");
+const copyPromptButton = document.querySelector("#copy-prompt");
+const downloadReceiptButton = document.querySelector("#download-receipt");
+const privacyReceipt = document.querySelector("#privacy-receipt");
+const receiptPrompt = document.querySelector("#receipt-prompt");
+const receiptCreatedAt = document.querySelector("#receipt-created-at");
 const promptBuilder = document.querySelector("#prompt-builder");
 const builderSubject = document.querySelector("#builder-subject");
 const builderScene = document.querySelector("#builder-scene");
@@ -27,6 +44,9 @@ const builderControls = [
   builderComposition,
 ];
 let lastAppliedPrompt = "";
+let currentGeneratedPrompt = "";
+let currentReceipt = "";
+let currentCreatedAt;
 
 function updatePromptState() {
   const length = promptInput.value.length;
@@ -63,6 +83,34 @@ function showError(message) {
 function clearError() {
   errorMessage.textContent = "";
   errorMessage.hidden = true;
+}
+
+function triggerDownload(source, filename) {
+  const link = document.createElement("a");
+  link.href = source;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.className = "sr-only";
+  document.body.append(textArea);
+  textArea.select();
+  const copied = document.execCommand("copy");
+  textArea.remove();
+  if (!copied) {
+    throw new Error("Copy command was rejected");
+  }
 }
 
 promptInput.addEventListener("input", () => {
@@ -135,8 +183,19 @@ form.addEventListener("submit", async (event) => {
 
     resultImage.src = `data:${mimeType};base64,${imageBase64}`;
     resultCaption.textContent = `提示：${prompt}`;
+    currentGeneratedPrompt = prompt;
+    currentCreatedAt = new Date();
+    currentReceipt = buildPrivacyReceipt({
+      prompt,
+      model: modelName,
+      createdAt: currentCreatedAt,
+    });
+    receiptPrompt.textContent = prompt;
+    receiptCreatedAt.textContent = receiptDateFormatter.format(currentCreatedAt);
     emptyState.hidden = true;
     resultFigure.hidden = false;
+    exportActions.hidden = false;
+    privacyReceipt.hidden = false;
     clearButton.hidden = false;
     status.textContent = "圖片已產生完成。";
     resultImage.focus();
@@ -145,6 +204,47 @@ form.addEventListener("submit", async (event) => {
   } finally {
     setBusy(false);
   }
+});
+
+downloadImageButton.addEventListener("click", () => {
+  const imageSource = resultImage.getAttribute("src");
+  if (!imageSource?.startsWith("data:image/png;base64,") || !currentCreatedAt) {
+    showError("目前沒有可下載的圖片。");
+    return;
+  }
+
+  triggerDownload(imageSource, createExportFilename("image", currentCreatedAt));
+  status.textContent = "圖片下載已開始。";
+});
+
+copyPromptButton.addEventListener("click", async () => {
+  if (!currentGeneratedPrompt) {
+    showError("目前沒有可複製的提示文字。");
+    return;
+  }
+
+  try {
+    await copyText(currentGeneratedPrompt);
+    status.textContent = "提示文字已複製。";
+  } catch {
+    showError("瀏覽器不允許自動複製，請直接從收據選取提示文字。");
+  }
+});
+
+downloadReceiptButton.addEventListener("click", () => {
+  if (!currentReceipt || !currentCreatedAt) {
+    showError("目前沒有可下載的隱私收據。");
+    return;
+  }
+
+  const receiptFile = new Blob([currentReceipt], { type: "text/plain;charset=utf-8" });
+  const receiptUrl = URL.createObjectURL(receiptFile);
+  triggerDownload(
+    receiptUrl,
+    createExportFilename("privacy-receipt", currentCreatedAt),
+  );
+  setTimeout(() => URL.revokeObjectURL(receiptUrl), 0);
+  status.textContent = "隱私收據下載已開始。";
 });
 
 clearButton.addEventListener("click", () => {
@@ -157,7 +257,14 @@ clearButton.addEventListener("click", () => {
   lastAppliedPrompt = "";
   resultImage.removeAttribute("src");
   resultCaption.textContent = "";
+  receiptPrompt.textContent = "";
+  receiptCreatedAt.textContent = "";
+  currentGeneratedPrompt = "";
+  currentReceipt = "";
+  currentCreatedAt = undefined;
   resultFigure.hidden = true;
+  exportActions.hidden = true;
+  privacyReceipt.hidden = true;
   emptyState.hidden = false;
   clearButton.hidden = true;
   clearError();

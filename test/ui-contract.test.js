@@ -52,4 +52,29 @@ describe("browser UI contract", () => {
     assert.match(script, /import \{[^}]*composePrompt[^}]*\} from "\.\/prompt-tools\.js"/s);
     assert.match(script, /window\.confirm/);
   });
+
+  it("provides explicit exports and an on-page privacy receipt after generation", async () => {
+    const html = await readFile(new URL("public/index.html", projectRoot), "utf8");
+    const script = await readFile(new URL("public/app.js", projectRoot), "utf8");
+    const styles = await readFile(new URL("public/styles.css", projectRoot), "utf8");
+
+    assert.match(html, /id="export-actions"[^>]+hidden/);
+    for (const action of ["download-image", "copy-prompt", "download-receipt"]) {
+      assert.match(html, new RegExp(`id="${action}"[^>]+type="button"`));
+    }
+    assert.match(html, /id="privacy-receipt"[^>]+hidden/);
+    assert.match(html, /id="receipt-prompt"/);
+    assert.match(html, /id="receipt-created-at"/);
+    assert.match(html, /無法撤回已傳送至 OpenAI 的資料/);
+    assert.match(
+      script,
+      /import \{[^}]*buildPrivacyReceipt[^}]*createExportFilename[^}]*\} from "\.\/prompt-tools\.js"/s,
+    );
+    assert.match(script, /navigator\.clipboard\.writeText/);
+    assert.match(script, /new Blob\(\[currentReceipt\]/);
+    assert.match(script, /receiptPrompt\.textContent = prompt/);
+    assert.match(script, /privacyReceipt\.hidden = false/);
+    assert.match(script, /privacyReceipt\.hidden = true/);
+    assert.match(styles, /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/s);
+  });
 });

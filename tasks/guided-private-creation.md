@@ -14,9 +14,9 @@
 
 ## Slice 3: Receipt and exports
 
-- [ ] Display the privacy receipt after a successful generation.
-- [ ] Add PNG download, prompt copy, and receipt download actions.
-- [ ] Clear prompt, builder, image, and receipt state together.
+- [x] Display the privacy receipt after a successful generation.
+- [x] Add PNG download, prompt copy, and receipt download actions.
+- [x] Clear prompt, builder, image, and receipt state together.
 
 ## Completion Gate
 

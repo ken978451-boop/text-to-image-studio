@@ -185,6 +185,51 @@
             <img id="result-image" alt="依提示文字產生的圖片" tabindex="-1">
             <figcaption id="result-caption"></figcaption>
           </figure>
+
+          <div id="export-actions" class="export-actions" hidden aria-label="成果匯出">
+            <button id="download-image" class="action-button" type="button">下載 PNG</button>
+            <button id="copy-prompt" class="action-button" type="button">複製提示文字</button>
+            <button id="download-receipt" class="action-button" type="button">下載隱私收據</button>
+          </div>
+
+          <section
+            id="privacy-receipt"
+            class="privacy-receipt"
+            aria-labelledby="privacy-receipt-title"
+            hidden
+          >
+            <p class="step-label">03 · PRIVACY RECEIPT</p>
+            <h3 id="privacy-receipt-title">這次產生發生了什麼？</h3>
+            <p class="receipt-intro">
+              收據只存在目前頁面。下載的文字檔會包含完整提示文字，請由你自行妥善保存。
+            </p>
+            <dl class="receipt-list">
+              <div>
+                <dt>傳送內容</dt>
+                <dd id="receipt-prompt"></dd>
+              </div>
+              <div>
+                <dt>接收服務</dt>
+                <dd>OpenAI Image API</dd>
+              </div>
+              <div>
+                <dt>模型</dt>
+                <dd>gpt-image-2</dd>
+              </div>
+              <div>
+                <dt>產生時間</dt>
+                <dd id="receipt-created-at"></dd>
+              </div>
+              <div>
+                <dt>本程式保存</dt>
+                <dd>不會持久保存提示文字或產生圖片。</dd>
+              </div>
+              <div>
+                <dt>清除限制</dt>
+                <dd>清除目前頁面無法撤回已傳送至 OpenAI 的資料。</dd>
+              </div>
+            </dl>
+          </section>
         </div>
       </section>
 
