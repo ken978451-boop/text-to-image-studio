@@ -2,9 +2,9 @@
 
 ## Slice 1: Browser-only data helpers
 
-- [ ] Test and implement prompt composition.
-- [ ] Test and implement neutral timestamped filenames.
-- [ ] Test and implement the plain-text privacy receipt.
+- [x] Test and implement prompt composition.
+- [x] Test and implement neutral timestamped filenames.
+- [x] Test and implement the plain-text privacy receipt.
 
 ## Slice 2: Optional prompt builder
 
